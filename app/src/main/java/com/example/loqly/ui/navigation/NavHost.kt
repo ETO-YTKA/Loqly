@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.loqly.ui.screens.login.LoginScreen
 
 @Composable
 fun LoqlyApp() {
@@ -22,17 +23,29 @@ fun LoqlyApp() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = NavRoutes.Splash
+                startDestination = NavRoutes.Login
             ) {
                 composable<NavRoutes.Splash> {
 
                 }
 
                 composable<NavRoutes.Login> {
-
+                    LoginScreen(
+                        navigateToChats = { navController.navigate(NavRoutes.Chats) },
+                        navigateToSignUp = { navController.navigate(NavRoutes.SignUp) },
+                        navigateToForgotPassword = { navController.navigate(NavRoutes.ForgotPassword) }
+                    )
                 }
 
                 composable<NavRoutes.SignUp> {
+
+                }
+
+                composable<NavRoutes.ForgotPassword> {
+
+                }
+
+                composable<NavRoutes.Chats> {
 
                 }
             }

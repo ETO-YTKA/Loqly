@@ -14,7 +14,7 @@ object NavRoutes {
     object SignUp
 
     @Serializable
-    object PasswordReset
+    object ForgotPassword
 
     @Serializable
     data class Profile(val userId: String)

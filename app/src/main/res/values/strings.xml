@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Loqly</string>
+    <string name="drop_in_and_say_hi">Drop in and say hi.</string>
+    <string name="new_here">New here?</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="log_in">Log in</string>
 </resources>
