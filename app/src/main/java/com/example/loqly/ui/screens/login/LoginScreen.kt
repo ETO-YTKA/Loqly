@@ -110,7 +110,7 @@ private fun LoginContent(
 }
 
 @Composable
-fun WelcomeHeader(modifier: Modifier = Modifier) {
+private fun WelcomeHeader(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -131,7 +131,7 @@ fun WelcomeHeader(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LoginForm(
+private fun LoginForm(
     uiState: LoginUiState,
     authenticate: () -> Unit,
     updateEmail: (String) -> Unit,
