@@ -1,0 +1,211 @@
+package com.example.loqly.ui.screens.signup
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.loqly.R
+import com.example.loqly.ui.components.CustomMediumButton
+import com.example.loqly.ui.components.CustomTextField
+import com.example.loqly.ui.theme.Dimen
+import com.example.loqly.ui.theme.LoqlyTheme
+
+@Composable
+fun SignUpScreen(
+    popBackStack: () -> Unit,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    SignUpContent(
+        uiState = uiState,
+        signUp = viewModel::signUp,
+        popBackStack = popBackStack,
+        updateEmail = viewModel::updateEmail,
+        updatePassword = viewModel::updatePassword,
+        togglePasswordVisibility = viewModel::togglePasswordVisibility
+    )
+}
+
+@Composable
+private fun SignUpContent(
+    uiState: SignUpUiState,
+    signUp: () -> Unit,
+    updateEmail: (String) -> Unit,
+    updatePassword: (String) -> Unit,
+    togglePasswordVisibility: () -> Unit,
+    popBackStack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(modifier = modifier) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = Dimen.Screen.horizontalPadding),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HeroSection()
+
+            SignUpForm(
+                uiState = uiState,
+                updateEmail = updateEmail,
+                updatePassword = updatePassword,
+                onSignUp = signUp,
+                togglePasswordVisibility = togglePasswordVisibility
+            )
+
+            //nav back to login
+            TextButton(
+                onClick = popBackStack
+            ) {
+                Text(
+                    text = stringResource(R.string.already_have_account),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.log_in),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HeroSection(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.app_name),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Text(
+            text = stringResource(R.string.make_your_little_corner_of_chat),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+private fun SignUpForm(
+    uiState: SignUpUiState,
+    onSignUp: () -> Unit,
+    updateEmail: (String) -> Unit,
+    updatePassword: (String) -> Unit,
+    togglePasswordVisibility: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        CustomTextField(
+            value = uiState.email,
+            onValueChange = updateEmail,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(R.string.email)) },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_mail),
+                    contentDescription = null
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            value = uiState.password,
+            onValueChange = updatePassword,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(R.string.password)) },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_password),
+                    contentDescription = null
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = togglePasswordVisibility
+                ) {
+                    AnimatedContent(targetState = uiState.isPasswordVisible) { isPasswordVisible ->
+                        if (isPasswordVisible) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_visibility_off),
+                                contentDescription = stringResource(R.string.hide_password)
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_visibility),
+                                contentDescription = stringResource(R.string.show_password)
+                            )
+                        }
+                    }
+                }
+            },
+            visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None
+            else PasswordVisualTransformation()
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        CustomMediumButton(
+            onClick = onSignUp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.create_account),
+                fontSize = Dimen.FontSize.mediumButton
+            )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SignUpScreenPreview() {
+    LoqlyTheme {
+        SignUpContent(
+            uiState = SignUpUiState(),
+            signUp = {},
+            updateEmail = {},
+            updatePassword = {},
+            togglePasswordVisibility = {},
+            popBackStack = {}
+        )
+    }
+}

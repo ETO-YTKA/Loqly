@@ -9,4 +9,7 @@
     <string name="show_password">Show Password</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="log_in">Log in</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="make_your_little_corner_of_chat">Make your little corner of chat.</string>
+    <string name="create_account">Create account</string>
 </resources>
