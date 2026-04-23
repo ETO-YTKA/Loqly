@@ -1,6 +1,9 @@
 package com.example.loqly.ui.components
 
-import androidx.compose.foundation.border
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -8,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.loqly.ui.theme.LoqlyTheme
 
@@ -49,10 +52,12 @@ fun CustomTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier.then(
-            if (isError) {
-                Modifier.border(2.dp, MaterialTheme.colorScheme.error, CircleShape)
-            } else Modifier
+        modifier = modifier.animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMedium,
+                visibilityThreshold = IntSize.VisibilityThreshold,
+            )
         ),
         enabled = enabled,
         readOnly = readOnly,
@@ -97,7 +102,8 @@ private fun CustomOutlinedTextFieldPreview() {
                     onValueChange = {},
                     label = { Text(text = "Label") },
                     modifier = Modifier.padding(16.dp),
-                    isError = true
+                    isError = true,
+                    supportingText = { Text(text = "Error message") }
                 )
             }
         }

@@ -142,6 +142,15 @@ private fun SignUpForm(
                     painter = painterResource(id = R.drawable.ic_mail),
                     contentDescription = null
                 )
+            },
+            isError = uiState.emailError != null,
+            supportingText = uiState.emailError?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         )
 
@@ -175,6 +184,15 @@ private fun SignUpForm(
                             )
                         }
                     }
+                }
+            },
+            isError = uiState.passwordError != null,
+            supportingText = uiState.passwordError?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             },
             visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None

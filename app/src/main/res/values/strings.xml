@@ -12,4 +12,12 @@
     <string name="already_have_account">Already have an account?</string>
     <string name="make_your_little_corner_of_chat">Make your little corner of chat.</string>
     <string name="create_account">Create account</string>
+    <string name="password_empty_error">Enter your password</string>
+    <string name="password_has_whitespaces_error">Password cannot contain whitespace</string>
+    <string name="password_too_short_error">Password must be at least 8 characters long</string>
+    <string name="password_no_digit_error">Password must contain at least one digit</string>
+    <string name="password_no_uppercase_error">Password must contain at least one uppercase letter</string>
+    <string name="password_no_lowercase_error">Password must contain at least one lowercase letter</string>
+    <string name="email_empty_error">Enter your email</string>
+    <string name="email_invalid_error">Enter a valid email address</string>
 </resources>
