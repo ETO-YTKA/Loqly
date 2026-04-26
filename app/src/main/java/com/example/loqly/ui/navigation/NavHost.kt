@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.loqly.ui.screens.chats.ChatsScreen
 import com.example.loqly.ui.screens.login.LoginScreen
 import com.example.loqly.ui.screens.signup.SignUpScreen
 
@@ -106,7 +107,7 @@ fun LoqlyApp() {
                 }
 
                 composable<NavRoutes.Chats> {
-
+                    ChatsScreen()
                 }
             }
         }

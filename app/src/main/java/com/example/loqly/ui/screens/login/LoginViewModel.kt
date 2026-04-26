@@ -46,6 +46,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun authenticate(onSuccess: () -> Unit) {
-        onSuccess
+        onSuccess()
     }
 }
