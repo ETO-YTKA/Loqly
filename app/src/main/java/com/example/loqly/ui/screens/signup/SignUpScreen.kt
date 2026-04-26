@@ -1,6 +1,5 @@
 package com.example.loqly.ui.screens.signup
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -43,21 +40,15 @@ fun SignUpScreen(
 
     SignUpContent(
         uiState = uiState,
-        signUp = viewModel::signUp,
+        onAction = viewModel::onAction,
         popBackStack = popBackStack,
-        updateEmail = viewModel::updateEmail,
-        updatePassword = viewModel::updatePassword,
-        togglePasswordVisibility = viewModel::togglePasswordVisibility
     )
 }
 
 @Composable
 private fun SignUpContent(
     uiState: SignUpUiState,
-    signUp: () -> Unit,
-    updateEmail: (String) -> Unit,
-    updatePassword: (String) -> Unit,
-    togglePasswordVisibility: () -> Unit,
+    onAction: (SignUpAction) -> Unit,
     popBackStack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -75,10 +66,7 @@ private fun SignUpContent(
 
             SignUpForm(
                 uiState = uiState,
-                updateEmail = updateEmail,
-                updatePassword = updatePassword,
-                onSignUp = signUp,
-                togglePasswordVisibility = togglePasswordVisibility
+                onAction
             )
 
             //nav back to login
@@ -123,18 +111,39 @@ private fun HeroSection(modifier: Modifier = Modifier) {
 @Composable
 private fun SignUpForm(
     uiState: SignUpUiState,
-    onSignUp: () -> Unit,
-    updateEmail: (String) -> Unit,
-    updatePassword: (String) -> Unit,
-    togglePasswordVisibility: () -> Unit,
+    onAction: (SignUpAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
     ) {
         CustomTextField(
+            value = uiState.username,
+            onValueChange = { onAction(SignUpAction.UpdateUsername(it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(R.string.username)) },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_account_circle),
+                    contentDescription = null
+                )
+            },
+            isError = uiState.usernameError != null,
+            supportingText = uiState.usernameError?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
             value = uiState.email,
-            onValueChange = updateEmail,
+            onValueChange = { onAction(SignUpAction.UpdateEmail(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(R.string.email)) },
             leadingIcon = {
@@ -158,7 +167,7 @@ private fun SignUpForm(
 
         CustomTextField(
             value = uiState.password,
-            onValueChange = updatePassword,
+            onValueChange = { onAction(SignUpAction.UpdatePassword(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(R.string.password)) },
             leadingIcon = {
@@ -166,25 +175,6 @@ private fun SignUpForm(
                     painter = painterResource(id = R.drawable.ic_password),
                     contentDescription = null
                 )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = togglePasswordVisibility
-                ) {
-                    AnimatedContent(targetState = uiState.isPasswordVisible) { isPasswordVisible ->
-                        if (isPasswordVisible) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_visibility_off),
-                                contentDescription = stringResource(R.string.hide_password)
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_visibility),
-                                contentDescription = stringResource(R.string.show_password)
-                            )
-                        }
-                    }
-                }
             },
             isError = uiState.passwordError != null,
             supportingText = uiState.passwordError?.let { message ->
@@ -195,14 +185,32 @@ private fun SignUpForm(
                     )
                 }
             },
-            visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None
-            else PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            value = uiState.confirmPassword,
+            onValueChange = { onAction(SignUpAction.UpdateConfirmPassword(it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(R.string.confirm_password)) },
+            isError = uiState.confirmPasswordError != null,
+            supportingText = uiState.confirmPasswordError?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            visualTransformation = PasswordVisualTransformation()
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
         CustomMediumButton(
-            onClick = onSignUp,
+            onClick = { onAction(SignUpAction.Submit) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -219,10 +227,7 @@ private fun SignUpScreenPreview() {
     LoqlyTheme {
         SignUpContent(
             uiState = SignUpUiState(),
-            signUp = {},
-            updateEmail = {},
-            updatePassword = {},
-            togglePasswordVisibility = {},
+            onAction = {},
             popBackStack = {}
         )
     }

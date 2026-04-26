@@ -9,6 +9,48 @@ class CredentialValidatorTest {
     private val validator = CredentialValidator()
 
     @Test
+    fun validateUsername_rejectsEmptyValue() {
+        val result = validator.validateUsername("")
+
+        assertEquals(AppResult.Failure(UsernameError.EMPTY_FIELD), result)
+    }
+
+    @Test
+    fun validateUsername_rejectsTooShortValue() {
+        val result = validator.validateUsername("ab")
+
+        assertEquals(AppResult.Failure(UsernameError.TOO_SHORT), result)
+    }
+
+    @Test
+    fun validateUsername_rejectsTooLongValue() {
+        val result = validator.validateUsername("abcdefghijklmnopqrstu")
+
+        assertEquals(AppResult.Failure(UsernameError.TOO_LONG), result)
+    }
+
+    @Test
+    fun validateUsername_rejectsInvalidCharacters() {
+        val result = validator.validateUsername("user-name")
+
+        assertEquals(AppResult.Failure(UsernameError.INVALID_CHARACTERS), result)
+    }
+
+    @Test
+    fun validateUsername_rejectsUnderscore() {
+        val result = validator.validateUsername("user_123")
+
+        assertEquals(AppResult.Failure(UsernameError.INVALID_CHARACTERS), result)
+    }
+
+    @Test
+    fun validateUsername_acceptsEnglishLettersAndNumbers() {
+        val result = validator.validateUsername("user123")
+
+        assertEquals(AppResult.Success(Unit), result)
+    }
+
+    @Test
     fun validateEmail_rejectsEmptyValue() {
         val result = validator.validateEmail("")
 

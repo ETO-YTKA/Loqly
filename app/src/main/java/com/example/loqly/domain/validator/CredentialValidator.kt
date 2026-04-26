@@ -4,6 +4,13 @@ import com.example.loqly.domain.result.AppError
 import com.example.loqly.domain.result.AppResult
 import jakarta.inject.Inject
 
+enum class UsernameError: AppError {
+    EMPTY_FIELD,
+    TOO_LONG,
+    TOO_SHORT,
+    INVALID_CHARACTERS
+}
+
 enum class EmailError: AppError {
     EMPTY_FIELD,
     INVALID_EMAIL
@@ -20,6 +27,29 @@ enum class PasswordError: AppError {
 
 
 class CredentialValidator @Inject constructor() {
+
+    fun validateUsername(username: String): AppResult<UsernameError, Unit> {
+        val trimmed = username.trim()
+
+        if (trimmed.isEmpty()) {
+            return AppResult.Failure(UsernameError.EMPTY_FIELD)
+        }
+
+        if (trimmed.length < 3) {
+            return AppResult.Failure(UsernameError.TOO_SHORT)
+        }
+
+        if (trimmed.length > 20) {
+            return AppResult.Failure(UsernameError.TOO_LONG)
+        }
+
+        val usernameRegex = Regex("^[A-Za-z0-9]+$")
+        if (!usernameRegex.matches(trimmed)) {
+            return AppResult.Failure(UsernameError.INVALID_CHARACTERS)
+        }
+
+        return AppResult.Success(Unit)
+    }
 
     fun validateEmail(email: String): AppResult<EmailError, Unit> {
         val trimmed = email.trim()

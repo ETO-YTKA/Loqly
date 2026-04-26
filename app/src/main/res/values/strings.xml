@@ -20,6 +20,13 @@
     <string name="password_no_lowercase_error">Password must contain at least one lowercase letter</string>
     <string name="email_empty_error">Enter your email</string>
     <string name="email_invalid_error">Enter a valid email address</string>
+    <string name="username_empty_error">Enter your username</string>
+    <string name="username_too_long_error">Username must be at most 20 characters long</string>
+    <string name="username_too_short_error">Username must be at least 3 characters long</string>
+    <string name="username_invalid_characters_error">Username can only contain English letters and numbers</string>
     <string name="search">Search</string>
     <string name="start_a_new_chat">Start a new chat</string>
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="passwords_do_not_match_error">Passwords do not match</string>
 </resources>
