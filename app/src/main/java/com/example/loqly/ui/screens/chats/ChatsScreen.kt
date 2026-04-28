@@ -79,7 +79,7 @@ private fun ChatsContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier) {
+private fun TopBar(modifier: Modifier = Modifier) {
     TopAppBar(
         title = {
             Text(
