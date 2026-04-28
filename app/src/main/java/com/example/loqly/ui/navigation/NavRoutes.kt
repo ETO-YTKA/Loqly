@@ -27,4 +27,7 @@ object NavRoutes {
 
     @Serializable
     data class Chat(val chatId: String)
+
+    @Serializable
+    object Onboarding
 }
