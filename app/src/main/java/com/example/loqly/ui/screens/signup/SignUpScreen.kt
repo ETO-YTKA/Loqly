@@ -34,6 +34,7 @@ import com.example.loqly.ui.theme.LoqlyTheme
 @Composable
 fun SignUpScreen(
     popBackStack: () -> Unit,
+    onSuccess: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -42,6 +43,7 @@ fun SignUpScreen(
         uiState = uiState,
         onAction = viewModel::onAction,
         popBackStack = popBackStack,
+        onSuccess = onSuccess
     )
 }
 
@@ -50,6 +52,7 @@ private fun SignUpContent(
     uiState: SignUpUiState,
     onAction: (SignUpAction) -> Unit,
     popBackStack: () -> Unit,
+    onSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(modifier = modifier) { paddingValues ->
@@ -66,7 +69,8 @@ private fun SignUpContent(
 
             SignUpForm(
                 uiState = uiState,
-                onAction
+                onAction = onAction,
+                onSuccess = onSuccess
             )
 
             //nav back to login
@@ -112,6 +116,7 @@ private fun HeroSection(modifier: Modifier = Modifier) {
 private fun SignUpForm(
     uiState: SignUpUiState,
     onAction: (SignUpAction) -> Unit,
+    onSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -210,7 +215,7 @@ private fun SignUpForm(
         Spacer(modifier = Modifier.height(32.dp))
 
         CustomMediumButton(
-            onClick = { onAction(SignUpAction.Submit) },
+            onClick = { onAction(SignUpAction.Submit(onSuccess = onSuccess)) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -228,7 +233,8 @@ private fun SignUpScreenPreview() {
         SignUpContent(
             uiState = SignUpUiState(),
             onAction = {},
-            popBackStack = {}
+            popBackStack = {},
+            onSuccess = {}
         )
     }
 }

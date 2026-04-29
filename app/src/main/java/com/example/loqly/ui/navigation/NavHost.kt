@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.loqly.ui.screens.chats.ChatsScreen
 import com.example.loqly.ui.screens.login.LoginScreen
+import com.example.loqly.ui.screens.onboarding.OnboardingScreen
 import com.example.loqly.ui.screens.signup.SignUpScreen
 
 private const val EnterDurationMillis = 280
@@ -98,7 +99,8 @@ fun LoqlyApp() {
 
                 composable<NavRoutes.SignUp> {
                     SignUpScreen(
-                        popBackStack = { navController.popBackStack() }
+                        popBackStack = { navController.popBackStack() },
+                        onSuccess = { navController.navigate(NavRoutes.Onboarding) }
                     )
                 }
 
@@ -108,6 +110,10 @@ fun LoqlyApp() {
 
                 composable<NavRoutes.Chats> {
                     ChatsScreen()
+                }
+
+                composable<NavRoutes.Onboarding> {
+                    OnboardingScreen()
                 }
             }
         }

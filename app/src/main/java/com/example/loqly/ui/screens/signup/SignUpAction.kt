@@ -5,5 +5,5 @@ sealed interface SignUpAction {
     data class UpdateEmail(val email: String) : SignUpAction
     data class UpdatePassword(val password: String) : SignUpAction
     data class UpdateConfirmPassword(val password: String) : SignUpAction
-    object Submit : SignUpAction
+    data class Submit(val onSuccess: () -> Unit) : SignUpAction
 }

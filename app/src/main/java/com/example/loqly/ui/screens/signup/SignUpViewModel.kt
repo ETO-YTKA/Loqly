@@ -39,7 +39,7 @@ class SignUpViewModel @Inject constructor(
             is SignUpAction.UpdateEmail -> updateEmail(action.email)
             is SignUpAction.UpdatePassword -> updatePassword(action.password)
             is SignUpAction.UpdateConfirmPassword -> updateConfirmPassword(action.password)
-            SignUpAction.Submit -> signUp()
+            is SignUpAction.Submit -> signUp(action.onSuccess)
         }
     }
 
@@ -115,7 +115,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun signUp() {
+    private fun signUp(onSuccess: () -> Unit) {
         usernameValidationJob?.cancel()
         emailValidationJob?.cancel()
         passwordValidationJob?.cancel()
@@ -125,6 +125,15 @@ class SignUpViewModel @Inject constructor(
         validateEmail()
         validatePassword()
         validateConfirmPassword()
+
+        if (isFieldsValid()) onSuccess()
+    }
+
+    private fun isFieldsValid(): Boolean {
+        return uiState.value.usernameError == null &&
+            uiState.value.emailError == null &&
+            uiState.value.passwordError == null &&
+            uiState.value.confirmPasswordError == null
     }
 
     private fun validateUsername() {
