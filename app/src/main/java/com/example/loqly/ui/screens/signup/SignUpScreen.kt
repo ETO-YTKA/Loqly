@@ -216,11 +216,21 @@ private fun SignUpForm(
 
         CustomMediumButton(
             onClick = { onAction(SignUpAction.Submit(onSuccess = onSuccess)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !uiState.isLoading
         ) {
             Text(
                 text = stringResource(R.string.create_account),
                 fontSize = Dimen.FontSize.mediumButton
+            )
+        }
+
+        uiState.generalError?.let { message ->
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loqly.R
 import com.example.loqly.domain.result.AppResult
+import com.example.loqly.domain.usecase.VerifySignUpRecaptchaUseCase
 import com.example.loqly.domain.validator.CredentialValidator
 import com.example.loqly.domain.validator.EmailError
 import com.example.loqly.domain.validator.PasswordError
@@ -17,12 +18,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    val credentialValidator: CredentialValidator,
-    @param:ApplicationContext val context: Context
+    private val credentialValidator: CredentialValidator,
+    @ApplicationContext private val context: Context,
+    private val verifySignUpRecaptchaUseCase: VerifySignUpRecaptchaUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
@@ -126,7 +129,46 @@ class SignUpViewModel @Inject constructor(
         validatePassword()
         validateConfirmPassword()
 
-        if (isFieldsValid()) onSuccess()
+        if (!isFieldsValid()) return
+
+        viewModelScope.launch {
+            _uiState.update { state ->
+                state.copy(
+                    isLoading = true,
+                    generalError = null
+                )
+            }
+
+            executeRecaptcha()
+
+            if (_uiState.value.generalError == null) {
+                onSuccess()
+            }
+        }
+    }
+
+    private fun executeRecaptcha() {
+        viewModelScope.launch {
+            when (verifySignUpRecaptchaUseCase.invoke()) {
+
+                is AppResult.Failure -> {
+                    _uiState.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            generalError = context.getString(R.string.recaptcha_verification_error)
+                        )
+                    }
+                }
+                is AppResult.Success -> {
+                    _uiState.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            generalError = null
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun isFieldsValid(): Boolean {
