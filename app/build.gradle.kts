@@ -24,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.loqly"
+        applicationId = "com.loqly.app"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
